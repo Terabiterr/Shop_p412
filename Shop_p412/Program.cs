@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Shop_p412.Services;
 
 namespace Shop_p412
 {
@@ -11,7 +12,7 @@ namespace Shop_p412
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
-            builder.Services.AddScoped<>
+            builder.Services.AddScoped<IServiceProduct, ServiceProduct>();
             builder.Services.AddControllersWithViews();
             var app = builder.Build();
 

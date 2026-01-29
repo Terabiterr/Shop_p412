@@ -1,9 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Shop_p412.Services;
 
 namespace Shop_p412.Controllers
 {
     public class ProductsController : Controller
     {
+        private readonly IServiceProduct _serviceProduct;
+        public ProductsController(IServiceProduct serviceProduct)
+        {
+            _serviceProduct = serviceProduct;
+        }
+
         [HttpGet]
         public async Task<IActionResult> ReadProducts()
         {
