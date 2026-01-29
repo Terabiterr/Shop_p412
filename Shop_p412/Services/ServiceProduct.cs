@@ -5,7 +5,7 @@ namespace Shop_p412.Services
     public interface IServiceProduct
     {
         public Task<Product> CreateAsync(Product product);
-        public Task<IEnumerable<Product>> GetAll();
+        public Task<IEnumerable<Product>> GetAllAsync();
         public Task<Product> GetByIdAsync(int id);
         public Task<Product> UpdateAsync(int id, Product product);
         public void DeleteAsync(int id);
@@ -32,7 +32,7 @@ namespace Shop_p412.Services
             await _db.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Product>> GetAll() => await _db.Products.ToListAsync();
+        public async Task<IEnumerable<Product>> GetAllAsync() => await _db.Products.ToListAsync();
 
         public async Task<Product> GetByIdAsync(int id)
         {

@@ -11,11 +11,13 @@ namespace Shop_p412.Controllers
             _serviceProduct = serviceProduct;
         }
 
+        //https://localhost:[port]/products/readproducts
+        //HTTP METHOD: GET
         [HttpGet]
         public async Task<IActionResult> ReadProducts()
         {
-            //Get product from database
-            return View(/*products*/);
+            var products = await _serviceProduct.GetAllAsync();
+            return View(products);
         }
         [HttpGet]
         public IActionResult CreateProduct() => View();
@@ -29,7 +31,7 @@ namespace Shop_p412.Controllers
             }
             else
             {
-                //return error
+                return BadRequest("Error model product ...");
             }
             return RedirectToAction("ReadProducts", "Products");
         }
