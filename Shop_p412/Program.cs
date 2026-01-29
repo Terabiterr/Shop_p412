@@ -11,6 +11,7 @@ namespace Shop_p412
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+            builder.Services.AddScoped<>
             builder.Services.AddControllersWithViews();
             var app = builder.Build();
 
