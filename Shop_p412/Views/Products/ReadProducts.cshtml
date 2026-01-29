@@ -1,7 +1,37 @@
 ﻿@model IEnumerable<Product>
 
 @{
-    ViewData["Title"] = "Read products";
+    Layout = "_Layout";
+    ViewData["Title"] = "Products";
 }
 
 <h1>Products</h1>
+
+<table class="table table-primary">
+    <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Price</th>
+            <th scope="col">Description</th>
+            <th scope="col">Tools</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var product in Model)
+        {
+            <tr>
+                <td>@product.Id</td>
+                <td>@product.Name</td>
+                <td>@product.Price</td>
+                <td>@product.Description</td>
+                <td>
+                    <a href="@Url.Action("Create")" class="btn btn-warning">Create</a>
+                    <a href="@Url.Action("Details", new { id = product.Id })" class="btn btn-info">Details</a>
+                    <a href="@Url.Action("Update", new { id = product.Id })" class="btn btn-primary">Update</a>
+                    <a href="@Url.Action("Delete", new { id = product.Id })" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
