@@ -32,5 +32,26 @@ namespace Shop_p412.Controllers
             }
             return BadRequest("Error model product ...");
         }
+        [HttpGet]
+        public IActionResult UpdateProduct() => View();
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateProduct(int id, [Bind("Name,Price,Description")] Product product)
+        {
+            if(ModelState.IsValid)
+            {
+                _ = await _serviceProduct.UpdateAsync(id, product);
+                return RedirectToAction("ReadProducts");
+            }
+            return BadRequest("Error model product ...");
+        }
+        [HttpGet("{id}")]
+        public IActionResult GetDeleteProduct(int id) => View("DeleteProduct", id);
+        [HttpPost]
+        public async Task<IActionResult> DeleteProduct(int id)
+        {
+            await _serviceProduct.DeleteAsync(id);
+            return RedirectToAction("ReadProducts");
+        }
     }
 }

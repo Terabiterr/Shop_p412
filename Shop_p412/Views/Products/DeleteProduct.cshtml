@@ -1,4 +1,16 @@
-﻿@{
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model int
+@{
     Layout = "_Layout";
     ViewData["Title"] = "Delete";
 }
+
+<h1>Delete</h1>
+
+<form asp-action="DeleteProduct" asp-controller="Products"  method="post">
+    <div class="form-group">
+        <label for="id">Id: </label>
+        <input name="id" class="form-control" value="@Model" />
+    </div>
+    <input class="btn btn-success" type="submit" value="Send" />
+</form>
