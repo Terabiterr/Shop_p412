@@ -27,13 +27,10 @@ namespace Shop_p412.Controllers
         {
             if(ModelState.IsValid)
             {
-                //Add product to database
+                _ = await _serviceProduct.CreateAsync(product);
+                return RedirectToAction("ReadProducts");
             }
-            else
-            {
-                return BadRequest("Error model product ...");
-            }
-            return RedirectToAction("ReadProducts", "Products");
+            return BadRequest("Error model product ...");
         }
     }
 }

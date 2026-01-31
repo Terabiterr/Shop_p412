@@ -1,4 +1,5 @@
-﻿@model IEnumerable<Product>
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model IEnumerable<Product>
 
 @{
     Layout = "_Layout";
@@ -6,6 +7,11 @@
 }
 
 <h1>Products</h1>
+<a 
+    asp-action="CreateProduct" 
+    asp-controller="Products" 
+    class="btn btn-warning">Create
+</a>
 
 <table class="table table-primary">
     <thead>
@@ -26,10 +32,9 @@
                 <td>@product.Price</td>
                 <td>@product.Description</td>
                 <td>
-                    <a href="@Url.Action("Create")" class="btn btn-warning">Create</a>
-                    <a href="@Url.Action("Details", new { id = product.Id })" class="btn btn-info">Details</a>
-                    <a href="@Url.Action("Update", new { id = product.Id })" class="btn btn-primary">Update</a>
-                    <a href="@Url.Action("Delete", new { id = product.Id })" class="btn btn-danger">Delete</a>
+                    <a href="@Url.Action("DetailsProduct", new { id = product.Id })" class="btn btn-info">Details</a>
+                    <a href="@Url.Action("UpdateProduct", new { id = product.Id })" class="btn btn-primary">Update</a>
+                    <a href="@Url.Action("DeleteProduct", new { id = product.Id })" class="btn btn-danger">Delete</a>
                 </td>
             </tr>
         }

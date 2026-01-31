@@ -5,13 +5,18 @@
     ViewData["Title"] = "Create";
 }
 
-<form asp-action="CreateProducts" asp-controller="Products" method="post">
+<form asp-action="CreateProduct" asp-controller="Products" method="post">
     <div class="form-group">
         <label asp-for="Name">Name: </label>
         <input asp-for="Name" class="form-control" placeholder="name..." />
     </div>
     <div class="form-group">
         <label asp-for="Price">Price: </label>
-        <input asp-for="Price" class="form-control" type="number" />
+        <input asp-for="Price" class="form-control" />
     </div>
+    <div class="form-group">
+        <label asp-for="Description">Price: </label>
+        <input asp-for="Description" class="form-control" placeholder="description ..."/>
+    </div>
+    <input class="btn btn-success" type="submit" value="Send" />
 </form>
