@@ -21,10 +21,10 @@ namespace Shop_p412.Controllers
             return View(products);
         }
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "admin,moderator")]
         public IActionResult CreateProduct() => View();
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "admin,moderator")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateProduct([Bind("Name,Price,Description")]Product  product)
         {
@@ -36,10 +36,10 @@ namespace Shop_p412.Controllers
             return BadRequest("Error model product ...");
         }
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "admin,moderator")]
         public IActionResult UpdateProduct() => View();
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "admin,moderator")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateProduct(int id, [Bind("Name,Price,Description")] Product product)
         {
@@ -51,10 +51,10 @@ namespace Shop_p412.Controllers
             return BadRequest("Error model product ...");
         }
         [HttpGet("{id}")]
-        [Authorize]
+        [Authorize(Roles = "admin,moderator")]
         public IActionResult GetDeleteProduct(int id) => View("DeleteProduct", id);
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "admin,moderator")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
             await _serviceProduct.DeleteAsync(id);

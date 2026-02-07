@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Shop_p412.Services;
 
@@ -40,7 +39,7 @@ namespace Shop_p412
                 options.Cookie.Name = "ShopApp.Auth";
 
                 // ⏳ життєвий цикл cookie
-                options.ExpireTimeSpan = TimeSpan.FromSeconds(10);
+                options.ExpireTimeSpan = TimeSpan.FromHours(2);
 
                 // 🔁 sliding expiration
                 options.SlidingExpiration = true;

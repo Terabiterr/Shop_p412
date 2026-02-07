@@ -73,5 +73,44 @@ namespace Shop_p412.Controllers
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
+        [HttpGet]
+        public IActionResult CreateRole() => View();
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateRole([Bind("Name")] IdentityRole newRole)
+        {
+            if (ModelState.IsValid)
+            {
+                await _roleManager.CreateAsync(newRole);
+                return RedirectToAction("Index", "Home");
+            }
+            return BadRequest("Error name ... [01]");
+        }
+        [HttpGet]
+        public IActionResult AssignRole() => View();
+        [HttpPost]
+        public async Task<IActionResult> AssignRole(string roleId, string userId)
+        {
+            if(string.IsNullOrEmpty(roleId) || string.IsNullOrEmpty(userId))
+            {
+                return BadRequest("userId ot roleId error ...");
+            }
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return BadRequest("userId is error ...");
+            }
+            var role = await _roleManager.FindByIdAsync(roleId);
+            if (role == null)
+            {
+                return BadRequest("roleId is error ...");
+            }
+            var result = await _userManager.AddToRoleAsync(user, role.Name);
+            if (result.Succeeded)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            return BadRequest(Json(result));
+        }
     }
 }
