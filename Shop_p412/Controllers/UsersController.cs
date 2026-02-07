@@ -16,6 +16,7 @@ namespace Shop_p412.Controllers
         }
 
         //Створити GET методи для тестування VIEWS
+        //http://localhost:[port]/users/register
         [HttpGet]
         public IActionResult Register()
         {
@@ -40,6 +41,37 @@ namespace Shop_p412.Controllers
                 }
             }
             return BadRequest("Error validation user... [02]");
+        }
+        [HttpGet]
+        public IActionResult Login() => View();
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login([Bind("Email,PasswordHash")] IdentityUser user)
+        {
+            if(ModelState.IsValid)
+            {
+                var result = await _signInManager.PasswordSignInAsync(
+                        user.Email,
+                        user.PasswordHash,
+                        isPersistent: false,
+                        lockoutOnFailure: false
+                    );
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    return BadRequest("Error email or password ... [01]");
+                }
+            }
+            return BadRequest("Error email or password ... [02]");
+        }
+        [HttpGet]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
         }
     }
 }

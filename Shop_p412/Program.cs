@@ -1,3 +1,4 @@
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Shop_p412.Services;
@@ -24,7 +25,7 @@ namespace Shop_p412
 
                 // Set custom password requirements
                 options.Password.RequireDigit = false; // No digit required
-                options.Password.RequireNonAlphanumeric = false; // ³����� characters required
+                options.Password.RequireNonAlphanumeric = false; // Відмінні characters required
                 options.Password.RequiredLength = 4; // Minimum length of 4 characters
                 options.Password.RequireUppercase = false; // No uppercase letter required
                 options.Password.RequireLowercase = false; // No lowercase letter required
@@ -33,12 +34,36 @@ namespace Shop_p412
             })
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<UsersContext>();
+
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.Cookie.Name = "ShopApp.Auth";
+
+                // ⏳ життєвий цикл cookie
+                options.ExpireTimeSpan = TimeSpan.FromSeconds(10);
+
+                // 🔁 sliding expiration
+                options.SlidingExpiration = true;
+
+                // 🔐 безпека
+                options.Cookie.HttpOnly = true;
+                options.Cookie.SameSite = SameSiteMode.Lax;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+
+                // 🚪 редіректи
+                options.LoginPath = "/Users/Login";
+                options.AccessDeniedPath = "/Users/Login";
+            });
+
+
+            builder.Services.AddSession();
+
             builder.Services.AddControllersWithViews();
             var app = builder.Build();
 
             app.UseRouting();
             app.UseAuthentication();
-            app.UseAuthentication();
+            app.UseAuthorization();
             app.UseStaticFiles();
             app.MapControllerRoute(
                 name: "default",

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Shop_p412.Services;
 
 namespace Shop_p412.Controllers
@@ -20,8 +21,10 @@ namespace Shop_p412.Controllers
             return View(products);
         }
         [HttpGet]
+        [Authorize]
         public IActionResult CreateProduct() => View();
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateProduct([Bind("Name,Price,Description")]Product  product)
         {
@@ -33,8 +36,10 @@ namespace Shop_p412.Controllers
             return BadRequest("Error model product ...");
         }
         [HttpGet]
+        [Authorize]
         public IActionResult UpdateProduct() => View();
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateProduct(int id, [Bind("Name,Price,Description")] Product product)
         {
@@ -46,8 +51,10 @@ namespace Shop_p412.Controllers
             return BadRequest("Error model product ...");
         }
         [HttpGet("{id}")]
+        [Authorize]
         public IActionResult GetDeleteProduct(int id) => View("DeleteProduct", id);
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> DeleteProduct(int id)
         {
             await _serviceProduct.DeleteAsync(id);
