@@ -8,7 +8,7 @@ namespace Shop_p412.Services
         public Task<IEnumerable<Product>> GetAllAsync();
         public Task<Product> GetByIdAsync(int id);
         public Task<Product> UpdateAsync(int id, Product product);
-        public Task DeleteAsync(int id);
+        public Task<Product> DeleteAsync(int id);
 
     }
     public class ServiceProduct : IServiceProduct
@@ -25,11 +25,15 @@ namespace Shop_p412.Services
             await _db.SaveChangesAsync();
             return product;
         }
-        public async Task DeleteAsync(int id)
+        public async Task<Product> DeleteAsync(int id)
         {
             var product = await _db.Products.FirstAsync(p => p.Id == id);
-            _db.Products.Remove(product);
-            await _db.SaveChangesAsync();
+            if(product != null)
+            {
+                _db.Products.Remove(product);
+                await _db.SaveChangesAsync();
+            }
+            return product;
         }
 
         public async Task<IEnumerable<Product>> GetAllAsync() => await _db.Products.ToListAsync();

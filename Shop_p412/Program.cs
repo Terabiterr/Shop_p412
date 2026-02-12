@@ -64,6 +64,7 @@ namespace Shop_p412
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseStaticFiles();
+            app.MapControllers();
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}"
