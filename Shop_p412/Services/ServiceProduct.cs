@@ -21,6 +21,10 @@ namespace Shop_p412.Services
 
         public async Task<Product> CreateAsync(Product product)
         {
+            if(product == null)
+            {
+                return product;
+            }
             await _db.Products.AddAsync(product);
             await _db.SaveChangesAsync();
             return product;

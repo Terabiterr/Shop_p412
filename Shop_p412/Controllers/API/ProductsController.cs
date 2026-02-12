@@ -6,12 +6,22 @@ namespace Shop_p412.Controllers.API
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductsController : ControllerBase
+    public class ProductsController : Controller
     {
         private readonly IServiceProduct _serviceProduct;
         public ProductsController(IServiceProduct serviceProduct)
         {
             _serviceProduct = serviceProduct;
+        }
+        [HttpPost]
+        public async Task<IActionResult> CreateProduct([FromBody] Product product)
+        {
+            var result = await _serviceProduct.CreateAsync(product);
+            if(result == null)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
         }
         [HttpGet]
         public async Task<IActionResult> GetAll()
