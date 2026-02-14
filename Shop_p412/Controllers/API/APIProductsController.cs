@@ -6,10 +6,10 @@ namespace Shop_p412.Controllers.API
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductsController : Controller
+    public class APIProductsController : Controller
     {
         private readonly IServiceProduct _serviceProduct;
-        public ProductsController(IServiceProduct serviceProduct)
+        public APIProductsController(IServiceProduct serviceProduct)
         {
             _serviceProduct = serviceProduct;
         }
