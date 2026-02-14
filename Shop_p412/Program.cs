@@ -59,17 +59,7 @@ namespace Shop_p412
             // =========================
             // AUTHENTICATION (JWT)
             // =========================
-            builder.Services.AddAuthentication(options =>
-            {
-                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-                .AddCookie(options =>
-                {
-                    options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
-                    options.SlidingExpiration = true;
-                    options.AccessDeniedPath = "/api/APIUser/AccessDenied";
-                })
+            builder.Services.AddAuthentication()
                 .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
                 {
                     options.TokenValidationParameters = new TokenValidationParameters
@@ -111,8 +101,8 @@ namespace Shop_p412
                 });
             });
 
-
             builder.Services.AddControllersWithViews();
+
             var app = builder.Build();
 
             // =========================
@@ -134,6 +124,7 @@ namespace Shop_p412
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
             app.Run();
+
 
         }
     }

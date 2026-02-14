@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Shop_p412.Services;
 
@@ -6,6 +8,15 @@ namespace Shop_p412.Controllers.API
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]  // Авторизация с использованием схемы JWT Bearer
+    /*
+     Додати реалізацію в APIUsersController методи CreateRole та AssignRole
+ 
+    Реєстрація та авторизація користувача через API та протестувати APIProductsController
+ 
+    Підготувати скриншоти тестування
+ 
+     */
     public class APIProductsController : Controller
     {
         private readonly IServiceProduct _serviceProduct;
@@ -14,6 +25,7 @@ namespace Shop_p412.Controllers.API
             _serviceProduct = serviceProduct;
         }
         [HttpPost]
+        [Authorize(Roles = "admin,moderator")]
         public async Task<IActionResult> CreateProduct([FromBody] Product product)
         {
             var result = await _serviceProduct.CreateAsync(product);
@@ -46,6 +58,7 @@ namespace Shop_p412.Controllers.API
         //Створити реалізацію методів UpdateProduct, DeleteProduct
         //Протестувати методи в Postman
         [HttpPut("{id}")]
+        [Authorize(Roles = "admin,moderator")]
         public async Task<IActionResult> UpdateProduct(int id, Product product)
         {
             var product_update = await _serviceProduct.UpdateAsync(id, product);
@@ -56,6 +69,7 @@ namespace Shop_p412.Controllers.API
             return Ok(product_update);
         }
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin,moderator")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
             var product = await _serviceProduct.DeleteAsync(id);

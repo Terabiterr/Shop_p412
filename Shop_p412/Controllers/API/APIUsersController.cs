@@ -24,7 +24,7 @@ namespace Shop_p412.Controllers.API
             _signInManager = signInManager;
             _configuration = configuration;
         }
-        [HttpPost]
+        [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] IdentityUser newUser)
         {
             if (ModelState.IsValid)
@@ -43,8 +43,7 @@ namespace Shop_p412.Controllers.API
             }
             return BadRequest(new { error = "Error validation user... [02]" });
         }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] IdentityUser user)
         {
             if (ModelState.IsValid)
