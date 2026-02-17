@@ -8,7 +8,7 @@ public class Product
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
     [Required]
-    [StringLength(50)]
+    [StringLength(maximumLength: 50, MinimumLength = 3, ErrorMessage = "Error length [max = 50, min = 3] ...")]
     public string? Name { get; set; }
     [Required]
     [Precision(10, 2)]
