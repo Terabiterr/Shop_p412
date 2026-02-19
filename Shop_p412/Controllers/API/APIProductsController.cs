@@ -28,12 +28,27 @@ namespace Shop_p412.Controllers.API
         [Authorize(Roles = "admin,moderator")]
         public async Task<IActionResult> CreateProduct([FromBody] Product product)
         {
-            var result = await _serviceProduct.CreateAsync(product);
-            if(result == null)
+            try
             {
-                return BadRequest(result);
+                //Product photo
+                using (var ms = new MemoryStream())
+                {
+                    await product.ImageData.CopyToAsync(ms);
+                    product.ImageFile = ms.ToArray();
+                }
+                //image/png
+                product.ImageType = product.ImageData.ContentType; //format
+                var result = await _serviceProduct.CreateAsync(product);
+                if (result == null)
+                {
+                    return BadRequest(result);
+                }
+                return Ok(result);
             }
-            return Ok(result);
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpGet]
         public async Task<IActionResult> GetAll()
@@ -79,5 +94,6 @@ namespace Shop_p412.Controllers.API
             }
             return Ok(product);
         }
+
     }
 }
