@@ -14,16 +14,19 @@
             <th scope="col">Price</th>
             <th scope="col">Description</th>
             <th scope="col">Tools</th>
-            <ht scope="col">Image</ht>
+            <th scope="col">Image</th>
         </tr>
     </thead>
     <tbody>
         <tr>
             <td>@Model.Id</td>
-            <td>@Model.Id</td>
-            <td>@Model.Id</td>
-            <td>@Model.Id</td>
-            <td>@Model.Id</td>
+            <td>@Model.Name</td>
+            <td>@Model.Price</td>
+            <td>@Model.Description</td>
+            <td>
+                <a href="@Url.Action("UpdateProduct", new { id = @Model.Id })" class="btn btn-primary">Update</a>
+                <a href="@Url.Action("GetDeleteProduct", new { id = @Model.Id })" class="btn btn-danger">Delete</a>
+            </td>
             <td>
                 @if (
                         Model.ImageFile != null &&

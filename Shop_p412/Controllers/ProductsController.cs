@@ -26,10 +26,19 @@ namespace Shop_p412.Controllers
         [HttpPost]
         [Authorize(Roles = "admin,moderator")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateProduct([Bind("Name,Price,Description")]Product  product)
+        public async Task<IActionResult> CreateProduct([Bind("Name,Price,Description,ImageData")]Product  product)
         {
             if(ModelState.IsValid)
             {
+                //Product photo
+                using (var ms = new MemoryStream())
+                {
+                    await product.ImageData.CopyToAsync(ms);
+                    product.ImageFile = ms.ToArray();
+                }
+                //image/png
+                product.ImageType = product.ImageData.ContentType; //format
+
                 _ = await _serviceProduct.CreateAsync(product);
                 return RedirectToAction("ReadProducts");
             }
@@ -61,7 +70,7 @@ namespace Shop_p412.Controllers
             return RedirectToAction("ReadProducts");
         }
 
-        [HttpGet("{id}")]
+        [HttpGet]
         public async Task<IActionResult> DetailsProduct(int id)
         {
             var product = await _serviceProduct.GetByIdAsync(id);
