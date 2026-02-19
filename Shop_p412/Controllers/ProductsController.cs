@@ -60,5 +60,12 @@ namespace Shop_p412.Controllers
             await _serviceProduct.DeleteAsync(id);
             return RedirectToAction("ReadProducts");
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> DetailsProduct(int id)
+        {
+            var product = await _serviceProduct.GetByIdAsync(id);
+            return View(product);
+        }
     }
 }

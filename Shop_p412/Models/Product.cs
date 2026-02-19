@@ -16,4 +16,15 @@ public class Product
     [Required]
     [StringLength(1024)]
     public string? Description { get; set; }
+    //Image product
+    [NotMapped]
+    public IFormFile? ImageData { get; set; }
+    //Format image
+    public string? ImageType { get; set; }
+    public byte[]? ImageFile { get; set; }
+    public override string ToString()
+    {
+        return $"Id: {Id}, Name: {Name}, Price: {Price}, Description: {Description}";
+    }
+
 }

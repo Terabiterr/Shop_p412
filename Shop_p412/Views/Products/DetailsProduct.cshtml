@@ -1,4 +1,41 @@
-﻿@{
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model Product
+
+@{
     Layout = "_Layout";
     ViewData["Title"] = "Details";
 }
+
+<table class="table table-primary">
+    <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Price</th>
+            <th scope="col">Description</th>
+            <th scope="col">Tools</th>
+            <ht scope="col">Image</ht>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@Model.Id</td>
+            <td>@Model.Id</td>
+            <td>@Model.Id</td>
+            <td>@Model.Id</td>
+            <td>@Model.Id</td>
+            <td>
+                @if (
+                        Model.ImageFile != null &&
+                        Model.ImageType != null
+                    )
+                {
+                    var base64 = Convert.ToBase64String(Model.ImageFile);
+                    var imgSrc = $"data:{Model.ImageType};base64,{base64}";
+                    <img src="@imgSrc" width="200" height="100" />
+                }
+            </td>
+
+        </tr>
+    </tbody>
+    </table>
