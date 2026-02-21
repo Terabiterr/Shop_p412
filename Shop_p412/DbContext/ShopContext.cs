@@ -1,7 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Shop_app_p32.Models;
 
-public class ShopContext : DbContext
+public class ShopContext : IdentityDbContext<ShopUser>
 {
 
     public DbSet<Product> Products => Set<Product>();

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 /*
- INSERT INTO ShopUser
+  INSERT INTO AspNetUsers
 (Id, UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed,
  PasswordHash, SecurityStamp, ConcurrencyStamp, PhoneNumber, PhoneNumberConfirmed,
  TwoFactorEnabled, LockoutEnabled, AccessFailedCount)
@@ -58,8 +58,8 @@ VALUES
 --🔹 7. CartItems (якщо є таблиця CartItems)
 INSERT INTO CartItems (CartId, ProductId, Quantity)
 VALUES
-(4, 2, 1),
-(5, 3, 1),
+(1, 2, 1),
+(2, 3, 1),
 (3, 2, 2);
  */
 namespace Shop_p412.Services

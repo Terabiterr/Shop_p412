@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Shop_app_p32.Models;
 using Shop_p412.Services;
 using System.Security.Claims;
 using System.Text;
@@ -20,15 +21,11 @@ namespace Shop_p412
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
-            builder.Services.AddDbContext<UsersContext>(options =>
-            {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-            });
             builder.Services.AddScoped<IServiceProduct, ServiceProduct>();
             // =========================
             // IDENTITY (COOKIE AUTH)
             // =========================
-            builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+            builder.Services.AddDefaultIdentity<ShopUser>(options =>
             {
                 options.SignIn.RequireConfirmedEmail = false;
 
@@ -40,7 +37,7 @@ namespace Shop_p412
                 options.Password.RequiredUniqueChars = 0;
             })
             .AddRoles<IdentityRole>()
-            .AddEntityFrameworkStores<UsersContext>();
+            .AddEntityFrameworkStores<ShopContext>();
 
             builder.Services.ConfigureApplicationCookie(options =>
             {
