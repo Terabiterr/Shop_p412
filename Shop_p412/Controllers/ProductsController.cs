@@ -30,15 +30,6 @@ namespace Shop_p412.Controllers
         {
             if(ModelState.IsValid)
             {
-                //Product photo
-                using (var ms = new MemoryStream())
-                {
-                    await product.ImageData.CopyToAsync(ms);
-                    product.ImageFile = ms.ToArray();
-                }
-                //image/png
-                product.ImageType = product.ImageData.ContentType; //format
-
                 _ = await _serviceProduct.CreateAsync(product);
                 return RedirectToAction("ReadProducts");
             }

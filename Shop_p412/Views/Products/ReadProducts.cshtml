@@ -37,18 +37,6 @@
                     <a href="@Url.Action("UpdateProduct", new { id = product.Id })" class="btn btn-primary">Update</a>
                     <a href="@Url.Action("GetDeleteProduct", new { id = product.Id })" class="btn btn-danger">Delete</a>
                 </td>
-                <td>
-                    @if (
-                            product.ImageFile != null &&
-                            product.ImageType != null
-                        )
-                    {
-                        var base64 = Convert.ToBase64String(product.ImageFile);
-                        var imgSrc = $"data:{product.ImageType};base64,{base64}";
-                        <img src="@imgSrc" width="200" height="100" />
-                    }
-                </td>
-
             </tr>
         }
     </tbody>

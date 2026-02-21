@@ -30,14 +30,6 @@ namespace Shop_p412.Controllers.API
         {
             try
             {
-                //Product photo
-                using (var ms = new MemoryStream())
-                {
-                    await product.ImageData.CopyToAsync(ms);
-                    product.ImageFile = ms.ToArray();
-                }
-                //image/png
-                product.ImageType = product.ImageData.ContentType; //format
                 var result = await _serviceProduct.CreateAsync(product);
                 if (result == null)
                 {
