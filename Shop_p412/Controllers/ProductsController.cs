@@ -1,71 +1,58 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Shop_p412.Services;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
-namespace Shop_p412.Controllers
+public class ProductsController : Controller
 {
-    public class ProductsController : Controller
+    private readonly ShopContext _context;
+
+    public ProductsController(ShopContext context)
     {
-        private readonly IServiceProduct _serviceProduct;
-        public ProductsController(IServiceProduct serviceProduct)
-        {
-            _serviceProduct = serviceProduct;
-        }
+        _context = context;
+    }
 
-        //https://localhost:[port]/products/readproducts
-        //HTTP METHOD: GET
-        [HttpGet]
-        public async Task<IActionResult> ReadProducts()
-        {
-            var products = await _serviceProduct.GetAllAsync();
-            return View(products);
-        }
-        [HttpGet]
-        [Authorize(Roles = "admin,moderator")]
-        public IActionResult CreateProduct() => View();
-        [HttpPost]
-        [Authorize(Roles = "admin,moderator")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateProduct([Bind("Name,Price,Description,ImageData")]Product  product)
-        {
-            if(ModelState.IsValid)
-            {
-                _ = await _serviceProduct.CreateAsync(product);
-                return RedirectToAction("ReadProducts");
-            }
-            return BadRequest("Error model product ...");
-        }
-        [HttpGet]
-        [Authorize(Roles = "admin,moderator")]
-        public IActionResult UpdateProduct() => View();
-        [HttpPost]
-        [Authorize(Roles = "admin,moderator")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateProduct(int id, [Bind("Name,Price,Description")] Product product)
-        {
-            if(ModelState.IsValid)
-            {
-                _ = await _serviceProduct.UpdateAsync(id, product);
-                return RedirectToAction("ReadProducts");
-            }
-            return BadRequest("Error model product ...");
-        }
-        [HttpGet("{id}")]
-        [Authorize(Roles = "admin,moderator")]
-        public IActionResult GetDeleteProduct(int id) => View("DeleteProduct", id);
-        [HttpPost]
-        [Authorize(Roles = "admin,moderator")]
-        public async Task<IActionResult> DeleteProduct(int id)
-        {
-            await _serviceProduct.DeleteAsync(id);
-            return RedirectToAction("ReadProducts");
-        }
+    public async Task<IActionResult> Index()
+    {
+        var products = await _context.Products
+            .Include(p => p.Category)
+            .ToListAsync();
 
-        [HttpGet]
-        public async Task<IActionResult> DetailsProduct(int id)
+        return View(products);
+    }
+
+    public async Task<IActionResult> Details(int id)
+    {
+        var product = await _context.Products
+            .Include(p => p.Category)
+            .Include(p => p.ProductImages)
+            .Include(p => p.Reviews)
+            .ThenInclude(r => r.User)
+            .FirstOrDefaultAsync(p => p.Id == id);
+
+        if (product == null)
+            return NotFound();
+
+        return View(product);
+    }
+
+    public IActionResult Create()
+    {
+        ViewBag.Categories = _context.Categories.ToList();
+        return View();
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(Product product)
+    {
+        if (!ModelState.IsValid)
         {
-            var product = await _serviceProduct.GetByIdAsync(id);
+            ViewBag.Categories = _context.Categories.ToList();
             return View(product);
         }
+
+        _context.Add(product);
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction(nameof(Index));
     }
 }
