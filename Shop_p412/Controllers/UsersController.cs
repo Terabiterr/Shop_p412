@@ -1,14 +1,15 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Shop_app_p32.Models;
 
 namespace Shop_p412.Controllers
 {
     public class UsersController : Controller
     {
-        public UserManager<IdentityUser> _userManager {  get; set; }
+        public UserManager<ShopUser> _userManager {  get; set; }
         public RoleManager<IdentityRole> _roleManager { get; set; }
-        public SignInManager<IdentityUser> _signInManager { get; set; }
-        public UsersController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, SignInManager<IdentityUser> signInManager)
+        public SignInManager<ShopUser> _signInManager { get; set; }
+        public UsersController(UserManager<ShopUser> userManager, RoleManager<IdentityRole> roleManager, SignInManager<ShopUser> signInManager)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -24,7 +25,7 @@ namespace Shop_p412.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register([Bind("Email,PasswordHash")] IdentityUser newUser)
+        public async Task<IActionResult> Register([Bind("Email,PasswordHash")] ShopUser newUser)
         {
             if(ModelState.IsValid)
             {
@@ -46,7 +47,7 @@ namespace Shop_p412.Controllers
         public IActionResult Login() => View();
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login([Bind("Email,PasswordHash")] IdentityUser user)
+        public async Task<IActionResult> Login([Bind("Email,PasswordHash")] ShopUser user)
         {
             if(ModelState.IsValid)
             {

@@ -1,24 +1,24 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-public class CategoriesController : Controller
+[Route("api/[controller]")]
+[ApiController]
+public class APICategoriesController : Controller
 {
     private readonly ShopContext _context;
 
-    public CategoriesController(ShopContext context)
+    public APICategoriesController(ShopContext context)
     {
         _context = context;
     }
-
+    [HttpGet]
     public async Task<IActionResult> Index()
     {
         return View(await _context.Categories.ToListAsync());
     }
 
-    public IActionResult Create() => View();
 
     [HttpPost]
-    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(Category category)
     {
         if (!ModelState.IsValid)

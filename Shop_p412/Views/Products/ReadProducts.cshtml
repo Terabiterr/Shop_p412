@@ -20,8 +20,10 @@
             <th scope="col">Name</th>
             <th scope="col">Price</th>
             <th scope="col">Description</th>
+            <th scope="col">Quantity</th>
             <th scope="col">Tools</th>
-            <th scope="col">Image</th>
+            <th scope="col">CategoryName</th>
+            <th scope="col">ImagePath</th>
         </tr>
     </thead>
     <tbody>
@@ -32,10 +34,18 @@
                 <td>@product.Name</td>
                 <td>@product.Price</td>
                 <td>@product.Description</td>
+                <td>@product.Quantity</td>
                 <td>
                     <a href="@Url.Action("DetailsProduct", new { id = product.Id })" class="btn btn-info">Details</a>
                     <a href="@Url.Action("UpdateProduct", new { id = product.Id })" class="btn btn-primary">Update</a>
                     <a href="@Url.Action("GetDeleteProduct", new { id = product.Id })" class="btn btn-danger">Delete</a>
+                </td>
+                <td>@product.Category.Name</td>
+                <td>
+                    @foreach (var image in product.ProductImages)
+                    {
+                        <span>@image.ImageUrl</span><hr />
+                    }
                 </td>
             </tr>
         }

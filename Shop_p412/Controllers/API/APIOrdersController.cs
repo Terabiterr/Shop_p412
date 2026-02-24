@@ -4,13 +4,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shop_app_p32.Models;
 
+[Route("api/[controller]")]
+[ApiController]
 [Authorize]
-public class OrdersController : Controller
+public class APIOrdersController : Controller
 {
     private readonly ShopContext _context;
     private readonly UserManager<ShopUser> _userManager;
 
-    public OrdersController(
+    public APIOrdersController(
         ShopContext context,
         UserManager<ShopUser> userManager)
     {
@@ -18,6 +20,7 @@ public class OrdersController : Controller
         _userManager = userManager;
     }
 
+    [HttpGet]
     public async Task<IActionResult> MyOrders()
     {
         var user = await _userManager.GetUserAsync(User);
@@ -31,6 +34,7 @@ public class OrdersController : Controller
         return View(orders);
     }
 
+    [HttpPost]
     public async Task<IActionResult> Checkout()
     {
         var user = await _userManager.GetUserAsync(User);

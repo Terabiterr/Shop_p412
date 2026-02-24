@@ -3,13 +3,15 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Shop_app_p32.Models;
 
+[Route("api/[controller]")]
+[ApiController]
 [Authorize]
-public class ReviewsController : Controller
+public class APIReviewsController : Controller
 {
     private readonly ShopContext _context;
     private readonly UserManager<ShopUser> _userManager;
 
-    public ReviewsController(
+    public APIReviewsController(
         ShopContext context,
         UserManager<ShopUser> userManager)
     {

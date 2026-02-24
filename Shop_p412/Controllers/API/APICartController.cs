@@ -4,13 +4,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shop_app_p32.Models;
 
+[Route("api/[controller]")]
+[ApiController]
 [Authorize]
-public class CartController : Controller
+public class APICartController : Controller
 {
     private readonly ShopContext _context;
     private readonly UserManager<ShopUser> _userManager;
 
-    public CartController(
+    public APICartController(
         ShopContext context,
         UserManager<ShopUser> userManager)
     {
@@ -18,6 +20,7 @@ public class CartController : Controller
         _userManager = userManager;
     }
 
+    [HttpGet]
     public async Task<IActionResult> Index()
     {
         var user = await _userManager.GetUserAsync(User);
@@ -30,6 +33,7 @@ public class CartController : Controller
         return View(cart);
     }
 
+    [HttpPost]
     public async Task<IActionResult> AddToCart(int productId)
     {
         var user = await _userManager.GetUserAsync(User);

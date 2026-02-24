@@ -10,16 +10,17 @@ public class ProductsController : Controller
         _context = context;
     }
 
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> ReadProducts()
     {
         var products = await _context.Products
             .Include(p => p.Category)
+            .Include(p => p.ProductImages)
             .ToListAsync();
 
         return View(products);
     }
 
-    public async Task<IActionResult> Details(int id)
+    public async Task<IActionResult> DetailsProduct(int id)
     {
         var product = await _context.Products
             .Include(p => p.Category)
@@ -34,7 +35,7 @@ public class ProductsController : Controller
         return View(product);
     }
 
-    public IActionResult Create()
+    public IActionResult CreateProduct()
     {
         ViewBag.Categories = _context.Categories.ToList();
         return View();
@@ -42,7 +43,7 @@ public class ProductsController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(Product product)
+    public async Task<IActionResult> CreateProduct(Product product)
     {
         if (!ModelState.IsValid)
         {
