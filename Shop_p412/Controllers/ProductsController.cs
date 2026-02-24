@@ -35,6 +35,7 @@ public class ProductsController : Controller
         return View(product);
     }
 
+    [HttpGet]
     public IActionResult CreateProduct()
     {
         ViewBag.Categories = _context.Categories.ToList();
@@ -43,8 +44,9 @@ public class ProductsController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> CreateProduct(Product product)
+    public async Task<IActionResult> CreateProduct([Bind("Name,Price,Description,Quantity,CategoryId")]Product product)
     {
+        Console.WriteLine($"Name: {product.Name}, Price: {product.Price}, Description: {product.Description}, Quantity: {product.Quantity}, CategoryId: {product.CategoryId}");
         if (!ModelState.IsValid)
         {
             ViewBag.Categories = _context.Categories.ToList();
