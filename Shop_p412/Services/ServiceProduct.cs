@@ -102,7 +102,10 @@ namespace Shop_p412.Services
             return product;
         }
 
-        public async Task<IEnumerable<Product>> GetAllAsync() => await _db.Products.ToListAsync();
+        public async Task<IEnumerable<Product>> GetAllAsync() => await _db.Products
+            .Include(p => p.Category)
+            .Include(p => p.ProductImages)
+            .ToListAsync();
 
         public async Task<Product> GetByIdAsync(int id)
         {

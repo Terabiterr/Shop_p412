@@ -1,5 +1,5 @@
 const url_server = `http://localhost:5286`
-async function getToken() {
+export async function getToken() {
     const url_auth = `${url_server}/api/apiusers/login`
     return await fetch(
         url_auth,
@@ -11,7 +11,7 @@ async function getToken() {
             body: JSON.stringify({
                 Username: "admin",
                 email: 'admin@gmail.com',
-                PasswordHash: '1234'
+                PasswordHash: '12345'
             })
         }
     ).then(response => {

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Shop SPA</title>
+</head>
+<body>
+
+<h2>Products</h2>
+<div id="products"></div>
+
+<hr>
+
+<h2>Cart</h2>
+<div id="cart"></div>
+<button onclick="checkout()">Checkout</button>
+
+<script>
+
+/*
+  Вставь сюда свой JWT токен после логина
+*/
+const token = localStorage.getItem("token");
+
+/*
+  Загрузка товаров
+*/
+function loadProducts() {
+    fetch("https://localhost:5001/api/APIProducts")
+    .then(res => res.json())
+    .then(products => {
+
+        const container = document.getElementById("products");
+        container.innerHTML = "";
+
+        products.forEach(p => {
+            container.innerHTML += `
+                <div>
+                    <b>${p.name}</b>
+                    <p>${p.price}</p>
+                    <button onclick="addToCart(${p.id})">
+                        Add to cart
+                    </button>
+                </div>
+            `;
+        });
+    });
+}
+
+/*
+  Добавление в корзину
+*/
+function addToCart(productId) {
+    fetch("https://localhost:5001/api/APICart/add", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+        },
+        body: JSON.stringify(productId)
+    })
+    .then(() => loadCart());
+}
+
+/*
+  Загрузка корзины
+*/
+function loadCart() {
+    fetch("https://localhost:5001/api/APICart", {
+        headers: {
+            "Authorization": "Bearer " + token
+        }
+    })
+    .then(res => res.json())
+    .then(cart => {
+
+        const container = document.getElementById("cart");
+        container.innerHTML = "";
+
+        if (!cart || !cart.items || cart.items.length === 0) {
+            container.innerHTML = "Cart is empty";
+            return;
+        }
+
+        let total = 0;
+
+        cart.items.forEach(item => {
+            total += item.price * item.quantity;
+
+            container.innerHTML += `
+                <div>
+                    ${item.name}
+                    ${item.quantity} x ${item.price}
+                    <button onclick="removeItem(${item.productId})">
+                        Remove
+                    </button>
+                </div>
+            `;
+        });
+
+        container.innerHTML += "<h3>Total: " + total + "</h3>";
+    });
+}
+
+/*
+  Удаление товара
+*/
+function removeItem(productId) {
+    fetch("https://localhost:5001/api/APICart/" + productId, {
+        method: "DELETE",
+        headers: {
+            "Authorization": "Bearer " + token
+        }
+    })
+    .then(() => loadCart());
+}
+
+/*
+  Checkout
+*/
+function checkout() {
+    fetch("https://localhost:5001/api/APIOrders/checkout", {
+        method: "POST",
+        headers: {
+            "Authorization": "Bearer " + token
+        }
+    })
+    .then(res => res.json())
+    .then(order => {
+        alert("Order created id: " + order.id);
+        loadCart();
+    });
+}
+
+/*
+  Инициализация
+*/
+loadProducts();
+loadCart();
+
+</script>
+
+</body>
+</html>

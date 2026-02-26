@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 public class Product
 {
@@ -21,6 +22,7 @@ public class Product
     public int Quantity { get; set; }
     [Required]
     public int CategoryId { get; set; }
+    //[JsonIgnore]
     [ForeignKey(nameof(CategoryId))]
     public Category? Category { get; set; }
     public ICollection<OrderItem>? OrderItems { get; set; }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Shop_app_p32.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -13,11 +14,11 @@ namespace Shop_p412.Controllers.API
     public class APIUsersController : Controller
     {
 
-        public UserManager<IdentityUser> _userManager { get; set; }
+        public UserManager<ShopUser> _userManager { get; set; }
         public RoleManager<IdentityRole> _roleManager { get; set; }
-        public SignInManager<IdentityUser> _signInManager { get; set; }
+        public SignInManager<ShopUser> _signInManager { get; set; }
         public IConfiguration _configuration { get; set; }
-        public APIUsersController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, SignInManager<IdentityUser> signInManager, IConfiguration configuration)
+        public APIUsersController(UserManager<ShopUser> userManager, RoleManager<IdentityRole> roleManager, SignInManager<ShopUser> signInManager, IConfiguration configuration)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -25,7 +26,7 @@ namespace Shop_p412.Controllers.API
             _configuration = configuration;
         }
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] IdentityUser newUser)
+        public async Task<IActionResult> Register([FromBody] ShopUser newUser)
         {
             if (ModelState.IsValid)
             {
@@ -44,7 +45,7 @@ namespace Shop_p412.Controllers.API
             return BadRequest(new { error = "Error validation user... [02]" });
         }
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] IdentityUser user)
+        public async Task<IActionResult> Login([FromBody] ShopUser user)
         {
             if (ModelState.IsValid)
             {
@@ -67,7 +68,7 @@ namespace Shop_p412.Controllers.API
             }
             return BadRequest("Error email or password ... [02]");
         }
-        private async Task<string> GenerateJwtToken(IdentityUser user)
+        private async Task<string> GenerateJwtToken(ShopUser user)
         {
             var userRoles = await _userManager.GetRolesAsync(user); // 🟢 Отримуємо ролі
 
