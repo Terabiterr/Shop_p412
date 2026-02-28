@@ -1,12 +1,14 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shop_app_p32.Models;
+using System.Security.Claims;
 
 [Route("api/[controller]")]
 [ApiController]
-[Authorize]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]  // Авторизация с использованием схемы JWT Bearer
 public class APICartController : Controller
 {
     private readonly ShopContext _context;
@@ -30,13 +32,16 @@ public class APICartController : Controller
             .ThenInclude(i => i.Product)
             .FirstOrDefaultAsync(c => c.UserId == user.Id);
 
-        return View(cart);
+        return Ok(cart);
     }
 
     [HttpPost]
     public async Task<IActionResult> AddToCart(int productId)
     {
-        var user = await _userManager.GetUserAsync(User);
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var user = await _userManager.FindByIdAsync(userId);
+
+        Console.WriteLine($"userId: {userId}");
 
         var cart = await _context.Carts
             .Include(c => c.Items)
@@ -45,7 +50,8 @@ public class APICartController : Controller
         if (cart == null)
         {
             cart = new Cart { UserId = user.Id };
-            _context.Carts.Add(cart);
+            await _context.Carts.AddAsync(cart);
+            await _context.SaveChangesAsync();
         }
 
         var existingItem = cart.Items
@@ -56,12 +62,13 @@ public class APICartController : Controller
         else
             cart.Items.Add(new CartItem
             {
+                CartId = cart.Id,
                 ProductId = productId,
                 Quantity = 1
             });
 
         await _context.SaveChangesAsync();
 
-        return RedirectToAction(nameof(Index));
+        return Ok(cart);
     }
 }
