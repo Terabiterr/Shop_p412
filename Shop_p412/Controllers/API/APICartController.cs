@@ -35,13 +35,11 @@ public class APICartController : Controller
         return Ok(cart);
     }
 
-    [HttpPost]
+    [HttpPost("{productId}")] //Method WORKS OK!
     public async Task<IActionResult> AddToCart(int productId)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        var user = await _userManager.FindByIdAsync(userId);
-
-        Console.WriteLine($"userId: {userId}");
+        var user_email = User.FindFirst(ClaimTypes.Email)?.Value;
+        var user = await _userManager.FindByEmailAsync(user_email);
 
         var cart = await _context.Carts
             .Include(c => c.Items)
@@ -58,8 +56,11 @@ public class APICartController : Controller
             .FirstOrDefault(i => i.ProductId == productId);
 
         if (existingItem != null)
+        {
             existingItem.Quantity++;
+        }
         else
+        {
             cart.Items.Add(new CartItem
             {
                 CartId = cart.Id,
@@ -67,8 +68,8 @@ public class APICartController : Controller
                 Quantity = 1
             });
 
-        await _context.SaveChangesAsync();
-
+            await _context.SaveChangesAsync();
+        }
         return Ok(cart);
     }
 }
