@@ -25,7 +25,8 @@ public class APICartController : Controller
     [HttpGet]
     public async Task<IActionResult> Index()
     {
-        var user = await _userManager.GetUserAsync(User);
+        var user_email = User.FindFirst(ClaimTypes.Email)?.Value;
+        var user = await _userManager.FindByEmailAsync(user_email);
 
         var cart = await _context.Carts
             .Include(c => c.Items)

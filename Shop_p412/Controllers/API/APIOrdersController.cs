@@ -1,12 +1,14 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shop_app_p32.Models;
+using System.Security.Claims;
 
 [Route("api/[controller]")]
 [ApiController]
-[Authorize]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]  // Авторизация с использованием схемы JWT Bearer
 public class APIOrdersController : Controller
 {
     private readonly ShopContext _context;
@@ -37,7 +39,8 @@ public class APIOrdersController : Controller
     [HttpPost]
     public async Task<IActionResult> Checkout()
     {
-        var user = await _userManager.GetUserAsync(User);
+        var user_email = User.FindFirst(ClaimTypes.Email)?.Value;
+        var user = await _userManager.FindByEmailAsync(user_email);
 
         var cart = await _context.Carts
             .Include(c => c.Items)
@@ -45,7 +48,12 @@ public class APIOrdersController : Controller
             .FirstOrDefaultAsync(c => c.UserId == user.Id);
 
         if (cart == null || !cart.Items.Any())
-            return RedirectToAction("Index", "Cart");
+        {
+            return BadRequest(new
+            {
+                cart = "is empty"
+            });
+        }
 
         var order = new Order
         {
@@ -65,6 +73,6 @@ public class APIOrdersController : Controller
 
         await _context.SaveChangesAsync();
 
-        return RedirectToAction(nameof(MyOrders));
+        return Ok(order);
     }
 }
