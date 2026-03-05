@@ -1,5 +1,4 @@
-// import { loadCart } from './index';
- const url_server = `http://localhost:5286`
+const url_server = `http://localhost:5286`
 async function getToken() {
     const url_auth = `${url_server}/api/apiusers/login`
     return await fetch(
@@ -45,15 +44,15 @@ async function loadCart() {
         }
 
         let total = 0;
-
+        console.log(cart)
         cart.items.forEach(item => {
-            total += item.price * item.quantity;
+            total += item.product.price * item.product.quantity;
 
             container.innerHTML += `
                 <div>
-                    ${item.name}
-                    ${item.quantity} x ${item.price}
-                    <button onclick="removeItem(${item.productId})">
+                    ${item.product.name}
+                    ${item.product.quantity} x ${item.product.price}
+                    <button onclick="removeItem(${item.product.productId})">
                         Remove
                     </button>
                 </div>
@@ -61,6 +60,22 @@ async function loadCart() {
         });
 
         container.innerHTML += "<h3>Total: " + total + "</h3>";
+    });
+}
+/*
+  Checkout
+*/
+async function checkout() {
+     const token = await getToken()
+    fetch(url_server + "/api/APIOrders", {
+        method: "POST",
+        headers: {
+            "Authorization": "Bearer " + token
+        }
+    })
+    .then(res => res.json())
+    .then(order => {
+        window.location.reload()
     });
 }
 loadCart()

@@ -1,5 +1,5 @@
 const url_server = `http://localhost:5286`
-export async function getToken() {
+async function getToken() {
     const url_auth = `${url_server}/api/apiusers/login`
     return await fetch(
         url_auth,
@@ -26,37 +26,69 @@ export async function getToken() {
 async function loadProducts() {
     const url_products = `${url_server}/api/apiproducts`
     const token = await getToken()
-    return await fetch(
-        url_products,
-        {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
+
+    return await fetch(url_products, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
         }
-    ).then(response => {
-        if(!response.ok)
+    })
+    .then(response => {
+        if (!response.ok)
             throw new Error('Fail to get products ...')
         return response.json()
-    }).then(products => {
-        let result = ''
-        products.forEach(p => {
-            result += 
-            `
-                <div class="card" style="width: 18rem;">
-                    <img src="./img/product_test.jpg" class="card-img-top" alt="">
-                    <div class="card-body">
-                        <h5 id="titleId" class="card-title">${p.name}</h5>
-                        <p id="descriptionId" class="card-text">${p.description}</p>
-                        <p id="priceId" class="card-text">${p.price}</p>
-                        <a href="#" class="btn btn-primary">buy</a>
-                    </div>
-                </div>
-            `
-        });
-        document.getElementById("products")
-        .innerHTML = result
     })
+    .then(products => {
+        console.log(products)
+
+        products.forEach(p => {
+            let div_product = document.createElement("div")
+            div_product.setAttribute("class", "card_product")
+
+            div_product.innerHTML = `<i>${p.name}</i><br>`
+
+            let img_path = null
+
+            if (p.productImages && p.productImages.length > 0) {
+                img_path = p.productImages[0].imageUrl
+            }
+
+            if (img_path) {
+                div_product.innerHTML += `
+                    <img src="./img/${img_path}" alt="">
+                `
+            } else {
+                div_product.innerHTML += `
+                    <img src="./img/not_img.png" alt="">
+                `
+            }
+
+            div_product.innerHTML += `
+                <p>description: ${p.description}</p>
+                <strong>price: ${p.price}</strong><hr>
+                <strong>quantity: ${p.quantity}</strong><hr>
+                <button class="btn_buy" onclick="add_to_cart(${p.id})">buy</button>
+                `
+
+            document.getElementById("products").appendChild(div_product)
+        })
+    })
+}
+/*
+  Добавление в корзину
+*/
+async function add_to_cart(productId) {
+    const token = await getToken()
+    fetch(url_server + "/api/APICart/" + productId, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+        }
+    })
+    .then(() => {
+        //window.open('/cart');
+    });
 }
 loadProducts()
